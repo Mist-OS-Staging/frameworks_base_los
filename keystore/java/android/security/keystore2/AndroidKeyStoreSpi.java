@@ -91,7 +91,11 @@ import java.util.NoSuchElementException;
 
 import javax.crypto.SecretKey;
 
+<<<<<<< HEAD
 import com.android.internal.util.mist.PixelPropsUtils;
+=======
+import com.android.internal.util.lunaris.PixelPropsUtils;
+>>>>>>> c6400f2a2112 (Add Alert Slider user interface)
 
 /**
  * A java.security.KeyStore interface for the Android KeyStore. An instance of
