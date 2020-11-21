@@ -105,7 +105,7 @@ import android.widget.Editor;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.util.Preconditions;
 
-import com.android.internal.util.lunaris.HideDeveloperStatusUtils;
+import com.android.internal.util.mist.HideDeveloperStatusUtils;
 
 import java.io.IOException;
 import java.lang.annotation.ElementType;
