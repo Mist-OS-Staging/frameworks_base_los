@@ -20,4 +20,13 @@
 
     <!-- The CPUs to display in CPUInfoService view -->
     <string name="config_displayCpus" translatable="false"></string>
+<<<<<<< HEAD:packages/SystemUI/res/values/mist_config.xml
+=======
+
+    <!-- FPSInfoService FPS node file path -->
+    <string name="config_fpsInfoSysNode" translatable="false"></string>
+
+    <!-- FPS measure interval in milliseconds, default 1000 -->
+    <integer name="config_fpsReadInterval">1000</integer>
+>>>>>>> 9159d2dc81ec (SystemUI: Rewrite FPSInfoService in kt from scratch):packages/SystemUI/res/values/lunaris_config.xml
 </resources>
