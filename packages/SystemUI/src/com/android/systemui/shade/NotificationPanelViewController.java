@@ -3538,6 +3538,12 @@ public final class NotificationPanelViewController implements
         }
 
         @Override
+        public void onUiModeChanged() {
+            debugLog("onUiModeChanged");
+            reInflateViews();
+        }
+
+        @Override
         public void onDensityOrFontScaleChanged() {
             debugLog("onDensityOrFontScaleChanged");
             reInflateViews();
