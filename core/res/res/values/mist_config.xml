@@ -276,4 +276,7 @@
          <item>com.android.contacts</item>
          <item>com.android.documentsui</item>
     </string-array>
+
+    <!-- Boost Framework -->
+    <bool name="config_supportsBoostFramework">false</bool>
 </resources>
