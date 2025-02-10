@@ -38,7 +38,7 @@ import androidx.annotation.Nullable;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
 
-import com.android.settingslib.Utils;
+import com.android.systemui.res.R;
 import com.android.systemui.animation.Expandable;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -50,7 +50,6 @@ import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.QsEventLogger;
 import com.android.systemui.qs.logging.QSLogger;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.systemui.res.R;
 
 import javax.inject.Inject;
 
@@ -81,7 +80,7 @@ public class PreferredNetworkTile extends QSTileImpl<State> {
 
     @Override
     public boolean isAvailable() {
-        return !Utils.isWifiOnly(mContext);
+        return true;
     }
 
     @Override
@@ -90,9 +89,23 @@ public class PreferredNetworkTile extends QSTileImpl<State> {
     }
 
     @Override
-    public void handleClick(@Nullable Expandable expandable) {
+    protected void handleClick(@Nullable Expandable expandable) {
         final int mode = getPreferredNetworkMode();
-        final int newMode = TelephonyManagerConstants.getTargetMode(mode);
+        final int newMode;
+
+        if (!supports5G()) {
+            // For non-5G devices, toggle between LTE and lower modes
+            if (mode == TelephonyManagerConstants.NETWORK_MODE_LTE_CDMA_EVDO ||
+                mode == TelephonyManagerConstants.NETWORK_MODE_LTE_GSM_WCDMA ||
+                mode == TelephonyManagerConstants.NETWORK_MODE_LTE_CDMA_EVDO_GSM_WCDMA) {
+                newMode = TelephonyManagerConstants.NETWORK_MODE_WCDMA_PREF;
+            } else {
+                newMode = TelephonyManagerConstants.NETWORK_MODE_LTE_CDMA_EVDO_GSM_WCDMA;
+            }
+        } else {
+            newMode = TelephonyManagerConstants.getTargetMode(mode);
+        }
+
         if (newMode == -1) return;
         final int subId = SubscriptionManager.getDefaultDataSubscriptionId();
         mTelephonyManager.createForSubscriptionId(subId).setAllowedNetworkTypesForReason(
@@ -117,12 +130,26 @@ public class PreferredNetworkTile extends QSTileImpl<State> {
         state.icon = mIcon;
         state.label = mContext.getResources().getString(R.string.quick_settings_preferred_network_label);
         final int mode = getPreferredNetworkMode();
+
+        if (!supports5G()) {
+            // For non-5G devices, only show LTE status
+            state.state = Tile.STATE_ACTIVE;
+            boolean isLTE = mode == TelephonyManagerConstants.NETWORK_MODE_LTE_CDMA_EVDO ||
+                          mode == TelephonyManagerConstants.NETWORK_MODE_LTE_GSM_WCDMA ||
+                          mode == TelephonyManagerConstants.NETWORK_MODE_LTE_CDMA_EVDO_GSM_WCDMA;
+            state.secondaryLabel = isLTE ?
+                mContext.getResources().getString(R.string.quick_settings_preferred_network_lte) :
+                mContext.getResources().getString(R.string.quick_settings_preferred_network_3g);
+            return;
+        }
+
         final int newMode = TelephonyManagerConstants.getTargetMode(mode);
         state.state = newMode == -1 ? Tile.STATE_UNAVAILABLE : Tile.STATE_ACTIVE;
-        state.secondaryLabel = newMode == -1 ? mContext.getResources().getString(R.string.quick_settings_preferred_network_unsupported)
-                : (TelephonyManagerConstants.is5gMode(mode) ?
-                mContext.getResources().getString(R.string.quick_settings_preferred_network_nr)
-                : mContext.getResources().getString(R.string.quick_settings_preferred_network_lte));
+        state.secondaryLabel = newMode == -1 ?
+            mContext.getResources().getString(R.string.quick_settings_preferred_network_unsupported) :
+            (TelephonyManagerConstants.is5gMode(mode) ?
+            mContext.getResources().getString(R.string.quick_settings_preferred_network_nr) :
+            mContext.getResources().getString(R.string.quick_settings_preferred_network_lte));
     }
 
     @Override
@@ -132,7 +159,7 @@ public class PreferredNetworkTile extends QSTileImpl<State> {
 
     @Override
     public int getMetricsCategory() {
-       return MetricsEvent.MIST;
+        return MetricsEvent.QS_PANEL;
     }
 
     @Override
@@ -304,6 +331,16 @@ public class PreferredNetworkTile extends QSTileImpl<State> {
         raf = ((LTE & raf) > 0) ? (LTE | raf) : raf;
         raf = ((NR & raf) > 0) ? (NR | raf) : raf;
         return raf;
+    }
+
+    private boolean supports5G() {
+        final int subId = SubscriptionManager.getDefaultDataSubscriptionId();
+        if (subId == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+            return false;
+        }
+        long supportedRadioAccessFamily = mTelephonyManager.createForSubscriptionId(subId)
+                .getSupportedRadioAccessFamily();
+        return (supportedRadioAccessFamily & RadioConstants.NR) != 0;
     }
 
     static class TelephonyManagerConstants {
