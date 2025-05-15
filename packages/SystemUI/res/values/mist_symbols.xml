@@ -4,11 +4,16 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <declare-styleable name="WeatherTextView">
-        <attr name="weatherText" format="string" />
-    </declare-styleable>
+    <?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2019-2024 The Evolution X Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <!-- The location of the devices physical tri state switch -->
+    <java-symbol type="integer" name="config_alertSliderLocation" />
 
-    <declare-styleable name="ProgressImageView">
-        <attr name="typeface" format="string" />
-    </declare-styleable>
+    <!-- Whether key handler sends intent when changing slider position -->
+    <java-symbol type="string" name="config_alertSliderIntent" />
+</resources>
 </resources>
