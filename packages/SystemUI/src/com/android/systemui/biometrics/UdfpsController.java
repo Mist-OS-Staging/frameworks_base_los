@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2020 The Android Open Source Project
  *
@@ -1231,7 +1232,6 @@ public class UdfpsController implements DozeReceiver, Dumpable {
                 minor, major, orientation, time, gestureStart, isAod);
         Trace.endAsyncSection("UdfpsController.e2e.onPointerDown", 0);
 
-        final View view = mOverlay.getTouchOverlay();
         if (view != null && isOptical()) {
             if (mIgnoreRefreshRate) {
                 dispatchOnUiReady(requestId);
@@ -1245,6 +1245,10 @@ public class UdfpsController implements DozeReceiver, Dumpable {
                 cb.onFingerDown();
             }
             showUdfpsAnimation();
+        }
+
+        if (view != null && view.getViewRootImpl() != null) {
+            view.getViewRootImpl().notifyRendererOfExpensiveFrame();
         }
     }
 

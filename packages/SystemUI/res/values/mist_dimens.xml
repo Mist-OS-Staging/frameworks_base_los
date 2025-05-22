@@ -157,7 +157,7 @@
     <dimen name="qs_controls_slider_margin_end">12dp</dimen>
     <dimen name="qs_controls_center_height">170dp</dimen>
     <dimen name="qs_controls_slider_width">20dp</dimen>
-    <dimen name="qs_controls_slider_corner_radius">15dp</dimen>
+    <dimen name="qs_controls_slider_corner_radius">25dp</dimen>
     <dimen name="qs_controls_slider_margin_top">10dp</dimen>
     <dimen name="qs_controls_slider_margin_bottom">10dp</dimen>
     <dimen name="qs_controls_slider_icon_margin_bottom">16dp</dimen>

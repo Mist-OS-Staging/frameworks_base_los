@@ -8,7 +8,7 @@ package com.android.server.mist;
 import android.content.Context;
 import com.android.server.SystemService;
 
-import com.android.internal.util.evolution.DeviceConfigUtils;
+import com.android.internal.util.mist.DeviceConfigUtils;
 
 public class CustomDeviceConfigService extends SystemService {
 
