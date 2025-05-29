@@ -7000,6 +7000,16 @@ public final class Settings {
          */
         public static final String QQS_LAYOUT_ROWS = "qqs_layout_rows";
 
+
+        /**
+         * Settings dashboard styles
+         * 0 - AOSP Legacy
+         * 1 - AOSP Revamped
+         * 2 - DoT
+         * @hide
+         */
+         public static final String SETTINGS_DASHBOARD_STYLE = "settings_dashboard_style";
+
         /**
          * Whether StatusBar icons should use app icon
          * @hide
