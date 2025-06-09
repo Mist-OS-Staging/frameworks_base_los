@@ -917,7 +917,7 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver {
                 batteryHeight = res.getDimensionPixelSize(R.dimen.status_bar_battery_icon_height_landscape_origami);
                 batteryWidth = res.getDimensionPixelSize(R.dimen.status_bar_battery_icon_width_landscape_origami);
                 break;
-            case BATTERY_STYLE_LANDSCAPE_ONEUI7:Add commentMore actions
+            case BATTERY_STYLE_LANDSCAPE_ONEUI7:
                 batteryHeight = res.getDimensionPixelSize(R.dimen.status_bar_battery_icon_height_landscape_oneui7);
                 batteryWidth = res.getDimensionPixelSize(R.dimen.status_bar_battery_icon_width_landscape_oneui7);
                 break;
@@ -1035,7 +1035,7 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver {
                 mBatteryIconView.setVisibility(View.VISIBLE);
                 scaleBatteryMeterViews();
                 break;
-            case BATTERY_STYLE_LANDSCAPE_ONEUI7:Add commentMore actions
+            case BATTERY_STYLE_LANDSCAPE_ONEUI7:
                 mBatteryIconView.setImageDrawable(mLandscapeDrawableOneUI7);
                 mBatteryIconView.setVisibility(View.VISIBLE);
                 scaleBatteryMeterViews();
