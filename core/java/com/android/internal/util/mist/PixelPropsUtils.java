@@ -85,7 +85,6 @@ public final class PixelPropsUtils {
     private static final Map<String, Object> propsToChangeGeneric;
     private static final Map<String, Object> propsToChangeRecentPixel;
     private static final Map<String, Object> propsToChangePixelTablet;
-    private static final Map<String, Object> propsToChangePixel5a;
     private static final Map<String, Object> propsToChangeMeizu;
     private static final Map<String, ArrayList<String>> propsToKeep;
 
@@ -113,7 +112,6 @@ public final class PixelPropsUtils {
             "com.google.android.apps.wallpaper",
             "com.google.android.apps.wallpaper.pixel",
             "com.google.android.apps.weather",
-            "com.google.android.gms",
             "com.google.android.googlequicksearchbox",
             "com.google.android.soundpicker",
             "com.google.android.wallpaper.effects",
@@ -172,15 +170,6 @@ public final class PixelPropsUtils {
         propsToChangePixelTablet.put("MODEL", "Pixel Tablet");
         propsToChangePixelTablet.put("ID", "BP1A.250505.005");
         propsToChangePixelTablet.put("FINGERPRINT", "google/tangorpro/tangorpro:15/BP1A.250505.005/13277524:user/release-keys");
-        propsToChangePixel5a = new HashMap<>();
-        propsToChangePixel5a.put("BRAND", "google");
-        propsToChangePixel5a.put("MANUFACTURER", "Google");
-        propsToChangePixel5a.put("DEVICE", "barbet");
-        propsToChangePixel5a.put("PRODUCT", "barbet");
-        propsToChangePixel5a.put("HARDWARE", "barbet");
-        propsToChangePixel5a.put("MODEL", "Pixel 5a");
-        propsToChangePixel5a.put("ID", "AP2A.240805.005.S4");
-        propsToChangePixel5a.put("FINGERPRINT", "google/barbet/barbet:14/AP2A.240805.005.S4/12281092:user/release-keys");
         propsToChangeMeizu = new HashMap<>();
         propsToChangeMeizu.put("BRAND", "meizu");
         propsToChangeMeizu.put("MANUFACTURER", "Meizu");
@@ -240,18 +229,6 @@ public final class PixelPropsUtils {
                 if (!SystemProperties.getBoolean(SPOOF_QSB, false)) {
                     return;
                 }
-            } else if (packageName.equals(PACKAGE_GMS)) {
-                setPropValue("TIME", System.currentTimeMillis());
-                if (!isTensorDevice) {
-                    if (processName.toLowerCase().contains("gapps")
-                            || processName.toLowerCase().contains("gservice")
-                            || processName.toLowerCase().contains("learning")
-                            || processName.toLowerCase().contains("persistent")
-                            || processName.toLowerCase().contains("search")
-                            || processName.toLowerCase().contains("update")) {
-                        propsToChange.putAll(propsToChangePixel5a);
-                    }
-                }
             } else if (SystemProperties.getBoolean(SPOOF_PIXEL_PROPS, true)) {
                 if (sIsTablet) {
                     propsToChange.putAll(propsToChangePixelTablet);
@@ -283,13 +260,6 @@ public final class PixelPropsUtils {
         if (packageName.equals(PACKAGE_ARCORE)) {
             setPropValue("FINGERPRINT", sDeviceFingerprint);
             return;
-        }
-        // Show correct model name on gms services
-        if (packageName.toLowerCase().contains("com.google.android.gms")) {
-            if (processName != null && processName.toLowerCase().contains("ui")) {
-                setPropValue("MODEL", sDeviceModel);
-                return;
-            }
         }
     }
 
