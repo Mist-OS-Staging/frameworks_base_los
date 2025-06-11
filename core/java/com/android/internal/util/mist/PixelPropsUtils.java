@@ -66,9 +66,7 @@ public final class PixelPropsUtils {
     private static final String PACKAGE_GMS = "com.google.android.gms";
     private static final String PACKAGE_GOOGLE = "com.google";
     private static final String PACKAGE_NEXUS_LAUNCHER = "com.google.android.apps.nexuslauncher";
-    private static final String PACKAGE_QSB = "com.google.android.googlequicksearchbox";
     private static final String PACKAGE_SI = "com.google.android.settings.intelligence";
-    private static final String SPOOF_QSB = "persist.sys.qsb.enable";
     private static final String SPOOF_PIXEL_PROPS = "persist.sys.pphooks.enable";
 
     private static final String PROP_HOOKS = "persist.sys.pihooks_";
@@ -236,10 +234,6 @@ public final class PixelPropsUtils {
         if (Arrays.asList(packagesToChangeRecentPixel).contains(packageName)) {
             if (isMainlineDevice || !SystemProperties.getBoolean(SPOOF_PIXEL_PROPS, true)) {
                 return;
-            } else if (packageName.equals(PACKAGE_QSB)) {
-                if (!SystemProperties.getBoolean(SPOOF_QSB, false)) {
-                    return;
-                }
             } else if (packageName.equals(PACKAGE_GMS)) {
                 setPropValue("TIME", System.currentTimeMillis());
                 if (!isTensorDevice) {
