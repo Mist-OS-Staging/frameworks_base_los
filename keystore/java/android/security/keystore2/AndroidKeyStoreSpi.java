@@ -91,8 +91,6 @@ import java.util.NoSuchElementException;
 
 import javax.crypto.SecretKey;
 
-import com.android.internal.util.mist.PixelPropsUtils;
-
 /**
  * A java.security.KeyStore interface for the Android KeyStore. An instance of
  * it can be created via the {@link java.security.KeyStore#getInstance(String)
@@ -115,8 +113,6 @@ import com.android.internal.util.mist.PixelPropsUtils;
 public class AndroidKeyStoreSpi extends KeyStoreSpi {
     public static final String TAG = "AndroidKeyStoreSpi";
     public static final String NAME = "AndroidKeyStore";
-
-    public static final String SPOOF_PIXEL_GMS = "persist.sys.pixelprops.gms";
 
     private KeyStore2 mKeyStore;
     private @KeyProperties.Namespace int mNamespace = KeyProperties.NAMESPACE_APPLICATION;
@@ -183,11 +179,6 @@ public class AndroidKeyStoreSpi extends KeyStoreSpi {
 
     @Override
     public Certificate[] engineGetCertificateChain(String alias) {
-        boolean isPixelGmsEnabled = SystemProperties.getBoolean(SPOOF_PIXEL_GMS, true);
-        if (isPixelGmsEnabled) {
-            PixelPropsUtils.onEngineGetCertificateChain();
-        }
-
         KeyEntryResponse response = getKeyMetadata(alias);
 
         if (response == null || response.metadata.certificate == null) {
