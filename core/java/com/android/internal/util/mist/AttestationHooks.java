@@ -44,7 +44,10 @@ public final class AttestationHooks {
     private static final String PACKAGE_GPHOTOS = "com.google.android.apps.photos";
     private static final String PACKAGE_VENDING = "com.android.vending";
     private static final String PACKAGE_SNAPCHAT = "com.snapchat.android";
-    private static final String SPOOF_PIXEL_GPHOTOS = "persist.sys.gphooks.enable";
+
+    private static final String SPOOF_PIXEL_GPHOTOS = "persist.sys.pixelprops.gphotos";
+    private static final String SPOOF_PIXEL_SNAPCHAT = "persist.sys.pixelprops.snap";
+    private static final String SPOOF_PIXEL_VENDING = "persist.sys.pixelprops.vending";
 
     private static final Map<String, Object> sMainlineProps = Map.of(
         "BRAND", "google",
@@ -52,16 +55,7 @@ public final class AttestationHooks {
         "DEVICE", "komodo",
         "PRODUCT", "komodo",
         "MODEL", "Pixel 9 Pro XL",
-        "FINGERPRINT", "google/komodo/komodo:15/BP1A.250505.005/13277524:user/release-keys"
-    );
-
-    private static final Map<String, Object> sPixel5aProps = Map.of(
-        "BRAND", "google",
-        "MANUFACTURER", "Google",
-        "DEVICE", "barbet",
-        "PRODUCT", "barbet",
-        "MODEL", "Pixel 5a",
-        "FINGERPRINT", "google/barbet/barbet:14/AP2A.240805.005.S4/12281092:user/release-keys"
+        "FINGERPRINT", "google/komodo/komodo:16/BP2A.250605.031.A2/13578606:user/release-keys"
     );
 
     private static final Map<String, Object> sPixelXLProps = Map.of(
@@ -88,31 +82,24 @@ public final class AttestationHooks {
         sProcessName = processName;
 
         String model = SystemProperties.get("ro.product.model");
-        boolean isPixelDevice = SystemProperties.get("ro.soc.manufacturer").equalsIgnoreCase("Google");
-        boolean isMainlineDevice = isPixelDevice && model.matches("Pixel [8-9][a-zA-Z ]*");
-        boolean isTensorDevice = isPixelDevice && model.matches("Pixel [6-9][a-zA-Z ]*");
         boolean isGPhotosSpoofEnabled = SystemProperties.getBoolean(SPOOF_PIXEL_GPHOTOS, true);
 
         if (packageName.equals(PACKAGE_GPHOTOS)) {
-            if (isGPhotosSpoofEnabled) {
+            if (!isGPhotosSpoofEnabled) {
+                return;
+            } else {
                 sPixelXLProps.forEach(AttestationHooks::setPropValue);
-            } else if (!isMainlineDevice) {
-                if (isTensorDevice) {
-                    sMainlineProps.forEach(AttestationHooks::setPropValue);
-                } else {
-                    sPixel5aProps.forEach(AttestationHooks::setPropValue);
-                }
             }
         }
 
         if (packageName.equals(PACKAGE_VENDING)) {
-            if (SystemProperties.getBoolean("persist.sys.vending.enable", false)) {
+            if (SystemProperties.getBoolean(SPOOF_PIXEL_VENDING, false)) {
                 sMainlineProps.forEach(AttestationHooks::setPropValue);
             }
         }
 
         if (packageName.equals(PACKAGE_SNAPCHAT)) {
-            if (SystemProperties.getBoolean("persist.sys.snap.enable", false)) {
+            if (SystemProperties.getBoolean(SPOOF_PIXEL_SNAPCHAT, false)) {
                 sPixelXLProps.forEach(AttestationHooks::setPropValue);
             }
         }
