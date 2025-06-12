@@ -852,8 +852,8 @@ public class ApplicationPackageManager extends PackageManager {
 
     @Override
     public int checkPermission(String permName, String pkgName) {
-        return = getPermissionManager().checkPackageNamePermission(permName, pkgName,
-                mContext.getDeviceId(), getUserId());-
+        return getPermissionManager().checkPackageNamePermission(permName, pkgName,
+                mContext.getDeviceId(), getUserId());
     }
 
     @Override
