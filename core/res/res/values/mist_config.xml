@@ -59,9 +59,6 @@
     <!-- Whether device has physical tri state switch -->
     <bool name="config_hasAlertSlider">false</bool>
 
-    <!-- Whether the device supports Smart Pixels -->
-    <bool name="config_supportSmartPixels">true</bool>
-
     <!-- PowerOffAlarmService -->
     <bool name="config_powerOffAlarmEnabled">false</bool>
 

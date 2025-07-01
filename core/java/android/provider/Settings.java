@@ -6968,30 +6968,6 @@ public final class Settings {
         public static final String CUSTOM_RINGTONE_VIBRATION_PATTERN = "custom_ringtone_vibration_pattern";
 
         /**
-         * Whether to enable Smart Pixels
-         * @hide
-         */
-        public static final String SMART_PIXELS_ENABLE = "smart_pixels_enable";
-
-        /**
-         * Smart Pixels pattern
-         * @hide
-         */
-        public static final String SMART_PIXELS_PATTERN = "smart_pixels_pattern";
-
-        /**
-         * Smart Pixels Shift Timeout
-         * @hide
-         */
-        public static final String SMART_PIXELS_SHIFT_TIMEOUT = "smart_pixels_shift_timeout";
-
-        /**
-         * Whether Smart Pixels should enable on power saver mode
-         * @hide
-         */
-        public static final String SMART_PIXELS_ON_POWER_SAVE = "smart_pixels_on_power_save";
-
-        /**
          * Arcane Idle Manager
          * @hide
          */
@@ -12854,6 +12830,8 @@ public final class Settings {
         /** @hide */
         @SystemApi
         public static final int VOLUME_HUSH_MUTE = 2;
+        /** @hide */
+        public static final int VOLUME_HUSH_CYCLE = 3;
 
         /**
          * The number of times (integer) the user has manually enabled battery saver.
