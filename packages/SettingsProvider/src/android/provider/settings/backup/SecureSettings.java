@@ -307,14 +307,11 @@ public class SecureSettings {
         Settings.Secure.SELECTED_SPELL_CHECKER,
         // SELECTED_SPELL_CHECKER_SUBTYPE needs to be restored after SELECTED_SPELL_CHECKER
         Settings.Secure.SELECTED_SPELL_CHECKER_SUBTYPE,
-        // Evolution X additions
+        // MistOS additions
         Settings.Secure.VPN_ENFORCE_DNS,
-<<<<<<< HEAD
-=======
         Settings.Secure.DOZE_DOUBLE_TAP_GESTURE_AMBIENT,
         Settings.Secure.DOZE_PICK_UP_GESTURE_AMBIENT,
         Settings.Secure.EXTRA_DIM_AUTO_MODE,
         Settings.Secure.EXTRA_DIM_AUTO_TIME,
->>>>>>> cf7f213498fd (base: services: Introduce AutoDimService [1/2])
     };
 }
