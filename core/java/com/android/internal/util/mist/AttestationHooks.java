@@ -55,7 +55,16 @@ public final class AttestationHooks {
         "DEVICE", "komodo",
         "PRODUCT", "komodo",
         "MODEL", "Pixel 9 Pro XL",
-        "FINGERPRINT", "google/komodo/komodo:16/BP2A.250605.031.A2/13578606:user/release-keys"
+        "FINGERPRINT", "google/komodo/komodo:16/BP2A.250705.008/13578956:user/release-keys"
+    );
+
+    private static final Map<String, Object> sPixel5aProps = Map.of(
+        "BRAND", "google",
+        "MANUFACTURER", "Google",
+        "DEVICE", "barbet",
+        "PRODUCT", "barbet",
+        "MODEL", "Pixel 5a",
+        "FINGERPRINT", "google/barbet/barbet:14/AP2A.240805.005.S4/12281092:user/release-keys"
     );
 
     private static final Map<String, Object> sPixelXLProps = Map.of(
@@ -82,13 +91,20 @@ public final class AttestationHooks {
         sProcessName = processName;
 
         String model = SystemProperties.get("ro.product.model");
+        boolean isPixelDevice = SystemProperties.get("ro.soc.manufacturer").equalsIgnoreCase("Google");
+        boolean isMainlineDevice = isPixelDevice && model.matches("Pixel [8-9][a-zA-Z ]*");
+        boolean isTensorDevice = isPixelDevice && model.matches("Pixel [6-9][a-zA-Z ]*");
         boolean isGPhotosSpoofEnabled = SystemProperties.getBoolean(SPOOF_PIXEL_GPHOTOS, true);
 
         if (packageName.equals(PACKAGE_GPHOTOS)) {
-            if (!isGPhotosSpoofEnabled) {
-                return;
-            } else {
+            if (isGPhotosSpoofEnabled) {
                 sPixelXLProps.forEach(AttestationHooks::setPropValue);
+            } else if (!isMainlineDevice) {
+                if (isTensorDevice) {
+                    sMainlineProps.forEach(AttestationHooks::setPropValue);
+                } else {
+                    sPixel5aProps.forEach(AttestationHooks::setPropValue);
+                }
             }
         }
 
