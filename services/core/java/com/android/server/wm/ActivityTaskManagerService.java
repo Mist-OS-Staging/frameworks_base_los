@@ -3435,7 +3435,7 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
     }
 
     static void enforceTaskPermission(String func) {
-        if (PixelPropsUtils.shouldBypassTaskPermission(Binder.getCallingUid())) {
+        if (com.android.internal.util.android.BypassUtils.shouldBypassTaskPermission(Binder.getCallingUid())) {
             return;
         }
         if (checkCallingPermission(MANAGE_ACTIVITY_TASKS) == PackageManager.PERMISSION_GRANTED) {

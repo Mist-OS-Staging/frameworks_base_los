@@ -164,6 +164,8 @@ import com.android.server.utils.WatchedSparseBooleanArray;
 import com.android.server.utils.WatchedSparseIntArray;
 import com.android.server.wm.ActivityTaskManagerInternal;
 
+import com.mist.server.QuickSwitchService;
+
 import libcore.util.EmptyArray;
 
 import java.io.BufferedOutputStream;
@@ -740,7 +742,7 @@ public class ComputerEngine implements Computer {
             SaferIntentUtils.enforceIntentFilterMatching(args, list);
         }
 
-        return list;
+            return QuickSwitchService.recreateApplicationList(userId, list);
     }
 
     protected @NonNull List<ResolveInfo> queryIntentServicesInternalBody(Intent intent,
@@ -902,6 +904,8 @@ public class ComputerEngine implements Computer {
     public final ActivityInfo getActivityInfoCrossProfile(ComponentName component,
             @PackageManager.ResolveInfoFlagsBits long flags, int userId) {
         if (!mUserManager.exists(userId)) return null;
+        if (QuickSwitchService.shouldHide(userId, packageName))
+            return null;
         flags = updateFlagsForComponent(flags, userId);
 
         return getActivityInfoInternalBody(component, flags, Binder.getCallingUid(), userId);
@@ -996,6 +1000,21 @@ public class ComputerEngine implements Computer {
             return ai;
         }
         return null;
+    }
+
+public final ApplicationInfo getApplicationInfo(String packageName,
+        @PackageManager.ApplicationInfoFlagsBits long flags, int userId) {
+         // Check QuickSwitchService hiding
+         if (QuickSwitchService.shouldHide(userId, packageName)) {
+         return null;
+         }
+    
+        // Check app list hiding
+        if (canHideApp(Binder.getCallingUid(), packageName) &&
+             HideAppListUtils.shouldHideAppList(mContext, packageName)) {
+        return null;
+         }
+         return getApplicationInfoInternal(packageName, flags, Binder.getCallingUid(), userId);
     }
 
     public final ApplicationInfo getApplicationInfo(String packageName,
@@ -1724,15 +1743,16 @@ public class ComputerEngine implements Computer {
         }
     }
 
-    public final PackageInfo getPackageInfo(String packageName,
-            @PackageManager.PackageInfoFlagsBits long flags, int userId) {
-        if (canHideApp(Binder.getCallingUid(), packageName) &&
-            HideAppListUtils.shouldHideAppList(mContext, packageName)) {
-            return null;
-        }
-        return getPackageInfoInternal(packageName, PackageManager.VERSION_CODE_HIGHEST,
-                flags, Binder.getCallingUid(), userId);
-    }
+public final PackageInfo getPackageInfo(String packageName,
+        @PackageManager.PackageInfoFlagsBits long flags, int userId) {
+        if (QuickSwitchService.shouldHide(userId, packageName) ||
+        (canHideApp(Binder.getCallingUid(), packageName) &&
+         HideAppListUtils.shouldHideAppList(mContext, packageName))) {
+        return null;
+      }
+            return getPackageInfoInternal(packageName, PackageManager.VERSION_CODE_HIGHEST,
+            flags, Binder.getCallingUid(), userId);
+       }
 
     /**
      * Important: The provided filterCallingUid is used exclusively to filter out packages
@@ -1852,9 +1872,9 @@ public class ComputerEngine implements Computer {
 
         enforceCrossUserPermission(callingUid, userId, false /* requireFullPermission */,
                 false /* checkShell */, "get installed packages");
-
-        return recreatePackageList(callingUid, mContext,
+        return QuickSwitchService.recreatePackageList(
                         userId, getInstalledPackagesBody(flags, userId, callingUid));
+
     }
 
     protected ParceledListSlice<PackageInfo> getInstalledPackagesBody(long flags, int userId,
