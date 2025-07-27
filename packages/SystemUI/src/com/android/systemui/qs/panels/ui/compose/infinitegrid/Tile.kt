@@ -21,6 +21,8 @@ package com.android.systemui.qs.panels.ui.compose.infinitegrid
 import android.content.Context
 import android.content.res.Resources
 import android.os.Trace
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.provider.Settings
 import android.service.quicksettings.Tile.STATE_ACTIVE
 import android.service.quicksettings.Tile.STATE_INACTIVE
@@ -66,6 +68,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -182,6 +185,10 @@ fun Tile(
         val animatedColor by animateColorAsState(colors.background, label = "QSTileBackgroundColor")
         val animatedAlpha by animateFloatAsState(colors.alpha, label = "QSTileAlpha")
 
+        val context = LocalContext.current
+        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val EFFECT_CLICK = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
+
         TileExpandable(
             color = { animatedColor },
             shape = tileShape,
@@ -213,6 +220,9 @@ fun Tile(
                     var hasDetails = false
                     if (QsDetailedView.isEnabled) {
                         hasDetails = detailsViewModel?.onTileClicked(tile.spec) == true
+                    }
+                    if (!Flags.msdlFeedback()) {
+                        vibrator.vibrate(EFFECT_CLICK)
                     }
                     if (!hasDetails) {
                         // For those tile's who doesn't have a detailed view, process with their
