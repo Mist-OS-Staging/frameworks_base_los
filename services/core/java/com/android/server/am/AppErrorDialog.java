@@ -187,7 +187,7 @@ final class AppErrorDialog extends BaseErrorDialog implements View.OnClickListen
                 mHandler.obtainMessage(FORCE_QUIT_AND_REPORT).sendToTarget();
                 break;
             case com.android.internal.R.id.aerr_copy:
-                postToMemochoAndCopyURL();
+                postToMkrBinAndCopyURL();
                 mHandler.obtainMessage(FORCE_QUIT).sendToTarget();
                 break;
             case com.android.internal.R.id.aerr_close:
@@ -204,9 +204,9 @@ final class AppErrorDialog extends BaseErrorDialog implements View.OnClickListen
         }
     }
 
-    private void postToMemochoAndCopyURL() {
-        // Post to Memochō
-        MemochoUtils.upload(mPaste, new MemochoUtils.UploadResultCallback() {
+    private void postToMkrBinAndCopyURL() {
+        // Post to MkrBin
+        MkrBinUtils.upload(mPaste, new MkrBinUtils.UploadResultCallback() {
             @Override
             public void onSuccess(String url) {
                 // Copy to clipboard
