@@ -60,9 +60,12 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.RenderEffect;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.media.AudioManager;
 import android.os.Binder;
 import android.os.Build;
@@ -194,6 +197,11 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
     public static final String SYSTEM_DIALOG_REASON_DREAM = "dream";
 
     private static final boolean DEBUG = false;
+
+    private static final int BLUR_RADIUS = 25;
+    private static final float BLUR_SCALE = 0.8f;
+
+    private WindowManager mWindowManager;
 
     private static final String TAG = "GlobalActionsDialogLite";
 
@@ -2828,6 +2836,8 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
 
         protected ViewGroup mContainer;
 
+        private boolean mBlurEnabled = true;
+
         private final OnBackInvokedCallback mOnBackInvokedCallback = () -> {
             logOnBackInvocation();
             dismiss();
@@ -2939,6 +2949,7 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
             super.onCreate(savedInstanceState);
             getWindow().setTitle(getContext().getString(
                     com.android.systemui.res.R.string.accessibility_quick_settings_power_menu));
+            setupBlurEffect();
             initializeLayout();
             mWindowDimAmount = getWindow().getAttributes().dimAmount;
             getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
@@ -2951,6 +2962,30 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
         public OnBackInvokedDispatcher getOnBackInvokedDispatcher() {
             if (mOverriddenBackDispatcher != null) return mOverriddenBackDispatcher;
             else return super.getOnBackInvokedDispatcher();
+        }
+
+        private void setupBlurEffect() {
+            Window window = getWindow();
+            if (window != null && this.mBlurEnabled) {
+                WindowManager.LayoutParams params = window.getAttributes();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    params.flags |= WindowManager.LayoutParams.FLAG_BLUR_BEHIND;
+                    params.setBlurBehindRadius(BLUR_RADIUS);
+                    params.dimAmount = 0.4f;
+                    window.setFlags(
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                    );
+                } else {
+                    params.dimAmount = 0.6f;
+                    params.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                }
+
+                window.addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+                window.setAttributes(params);
+                window.setStatusBarColor(Color.TRANSPARENT);
+                window.setNavigationBarColor(Color.TRANSPARENT);
+            }
         }
 
         @Override
@@ -3070,6 +3105,11 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
                 }
             }
 
+            View blurBackground = findViewById(com.android.systemui.res.R.id.blur_background);
+            if (blurBackground != null && this.mBlurEnabled) {
+                applyBlurToBackgroundOnly(blurBackground);
+            }
+
             if (mBackgroundDrawable == null) {
                 mBackgroundDrawable = new ScrimDrawable();
                 mScrimAlpha = 1.0f;
@@ -3123,6 +3163,16 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
                                     .setListener(null);
                         }
                     });
+        }
+
+        private void applyBlurToBackgroundOnly(View blurBackground) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                RenderEffect blurEffect = RenderEffect.createBlurEffect(
+                    12f, 12f, Shader.TileMode.CLAMP
+                );
+                blurBackground.setRenderEffect(blurEffect);
+                blurBackground.setAlpha(0.9f);
+            }
         }
 
         @Override
