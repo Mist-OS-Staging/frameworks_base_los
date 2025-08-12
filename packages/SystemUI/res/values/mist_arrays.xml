@@ -4,13 +4,6 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-
-    <!-- Charging info current divider, if needed -->
-    <integer name="config_currentInfoDivider" translatable="false">1000</integer>
-
-    <!-- Update battery info every second when device is charging -->
-    <bool name="config_alternateFastchargeInfoUpdate">false</bool>
-
     <!-- Cardinal directions for the compass tile -->
     <string-array name="cardinal_directions">
         <item>@string/quick_settings_compass_N</item>  <!-- North -->
