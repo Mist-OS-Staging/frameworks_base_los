@@ -36,7 +36,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.internal.util.MemochoUtils;
+import com.android.internal.util.MkrBinUtils;
 
 final class AppErrorDialog extends BaseErrorDialog implements View.OnClickListener {
 

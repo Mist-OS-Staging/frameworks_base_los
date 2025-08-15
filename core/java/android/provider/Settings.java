@@ -14117,13 +14117,6 @@ public final class Settings {
         public static final String DOZE_DOUBLE_TAP_GESTURE_AMBIENT = "doze_double_tap_gesture_ambient";
 
         /**
-         * Whether to show ambient instead of waking for the pickup gesture
-         * Do note quick pickup (device sensor) is already configured to do that
-         * @hide
-         */
-        public static final String DOZE_PICK_UP_GESTURE_AMBIENT = "doze_pick_up_gesture_ambient";
-
-        /**
          *  Toggle the media squiggle animation
          *  0 = 0ff, 1 = on
          * @hide
