@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package com.android.internal.util.;
+package com.android.internal.util.mist;
 
 import android.app.ActivityTaskManager;
 import android.app.ActivityThread;
@@ -41,7 +41,7 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.android.internal.R;
-import com.android.internal.util..Utils;
+import com.android.internal.util.mist.Utils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
