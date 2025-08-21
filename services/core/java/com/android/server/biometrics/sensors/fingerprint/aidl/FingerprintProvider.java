@@ -103,8 +103,6 @@ import java.util.concurrent.atomic.AtomicLong;
 @SuppressWarnings("deprecation")
 public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvider {
 
-    private static final String TAG = "FingerprintProvider";
-
     private boolean mTestHalEnabled;
 
     @NonNull
@@ -291,7 +289,7 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
     }
 
     private String getTag() {
-        return TAG + "/" + mHalInstanceName;
+        return "FingerprintProvider/" + mHalInstanceName;
     }
 
     boolean hasHalInstance() {
