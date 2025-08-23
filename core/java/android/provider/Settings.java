@@ -7162,6 +7162,11 @@ public final class Settings {
          */
         public static final String EDGE_LIGHT_CUSTOM_COLOR = "edge_light_custom_color";
 
+         /**
+         * @hide
+         */
+        public static final String RECENTS_LOCKED_TASKS = "recents_locked_tasks";
+
         /**
          * @hide
          */
