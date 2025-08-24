@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 
-import com.android.internal.util.evolution.ImageHelper;
+import com.android.internal.util.mist.ImageHelper;
 import com.android.systemui.res.R;
 
 public class FileHeaderProvider implements
