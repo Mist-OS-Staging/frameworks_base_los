@@ -2,7 +2,7 @@
  * Copyright (C) 2020 The Pixel Experience Project
  *               2022 StatiXOS
  *               2021-2022 crDroid Android Project
- *               2019-2024 The MistOS Project
+ *               2019-2024 The Evolution X Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -269,7 +269,7 @@ public final class PixelPropsUtils {
         boolean isPixelGmsEnabled = SystemProperties.getBoolean(SPOOF_PIXEL_GMS, false);
         propsToChangeGeneric.forEach((k, v) -> setPropValue(k, v));
         setGameProps(packageName);
-
+        
         if (packageName == null || processName == null || packageName.isEmpty()) {
             return;
         }
@@ -304,7 +304,7 @@ public final class PixelPropsUtils {
                 propsToChange.putAll(propsToChangeMeizu);
             }
         }
-
+        
         dlog("Defining props for: " + packageName);
         for (Map.Entry<String, Object> prop : propsToChange.entrySet()) {
             String key = prop.getKey();
@@ -316,7 +316,7 @@ public final class PixelPropsUtils {
             dlog("Defining " + key + " prop for: " + packageName);
             setPropValue(key, value);
         }
-
+        
         // Set proper indexing fingerprint
         if (packageName.equals(PACKAGE_SI)) {
             setPropValue("FINGERPRINT", String.valueOf(Build.TIME));
