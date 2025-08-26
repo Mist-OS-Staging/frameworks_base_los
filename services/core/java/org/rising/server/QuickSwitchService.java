@@ -36,6 +36,7 @@ import android.os.IUserManager;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemProperties;
+import android.content.ComponentName;
 
 import com.android.server.ServiceThread;
 import com.android.server.SystemService;
@@ -195,4 +196,57 @@ public final class QuickSwitchService extends SystemService {
             }
         }
     }
+
+// Add this method to your QuickSwitchService class (before the final closing brace)
+public static ComponentName getValidLauncherComponent(Context context) {
+    int defaultLauncher = SystemProperties.getInt("persist.sys.default_launcher", 0);
+    String[] launcherComponents = context.getResources().getStringArray(
+        com.android.internal.R.array.config_launcherComponents);
+    String[] launcherPackages = context.getResources().getStringArray(
+        com.android.internal.R.array.config_launcherPackages);
+    
+    PackageManager pm = context.getPackageManager();
+    
+    // Validate the selected launcher exists
+    if (defaultLauncher >= 0 && defaultLauncher < launcherComponents.length && 
+        defaultLauncher < launcherPackages.length) {
+        
+        String packageName = launcherPackages[defaultLauncher];
+        try {
+            pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+            return ComponentName.unflattenFromString(launcherComponents[defaultLauncher]);
+        } catch (PackageManager.NameNotFoundException e) {
+            android.util.Log.w("QuickSwitch", "Selected launcher not found: " + packageName);
+        }
+    }
+    
+    // Fallback to com.android.launcher3 (index 0)
+    if (launcherPackages.length > 0 && launcherComponents.length > 0) {
+        try {
+            pm.getApplicationInfo(launcherPackages[0], PackageManager.GET_META_DATA);
+            return ComponentName.unflattenFromString(launcherComponents[0]);
+        } catch (PackageManager.NameNotFoundException e) {
+            android.util.Log.e("QuickSwitch", "No valid launcher found!");
+        }
+    }
+    
+    return null;
+}
+
+   public static void validateLauncherProperty(Context context) {
+    int currentLauncher = SystemProperties.getInt("persist.sys.default_launcher", 0);
+    String[] launcherPackages = context.getResources().getStringArray(
+        com.android.internal.R.array.config_launcherPackages);
+    
+    if (currentLauncher >= 0 && currentLauncher < launcherPackages.length) {
+        try {
+            context.getPackageManager().getApplicationInfo(
+                launcherPackages[currentLauncher], PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            // Reset to safe default
+            SystemProperties.set("persist.sys.default_launcher", "0");
+            android.util.Log.w("QuickSwitch", "Resetting invalid launcher selection to Launcher3");
+        }
+    }
+  }
 }

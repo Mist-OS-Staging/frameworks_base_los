@@ -524,9 +524,11 @@ public class EdgeBackGestureHandler implements PluginListener<NavigationEdgeBack
         mJavaAdapter = javaAdapter;
         mTunerService = Dependency.get(TunerService.class);
         mLastReportedConfig.setTo(mContext.getResources().getConfiguration());
-        int defaultLauncher = SystemProperties.getInt("persist.sys.default_launcher", 0);
-        String[] launcherComponents = context.getResources().getStringArray(com.android.internal.R.array.config_launcherComponents);
-        ComponentName recentsComponentName = ComponentName.unflattenFromString(launcherComponents[defaultLauncher]);
+        ComponentName recentsComponentName = getValidLauncherComponent(context);
+        if (recentsComponentName == null) {
+            recentsComponentName = ComponentName.unflattenFromString(
+                context.getString(com.android.internal.R.string.config_recentsComponentName));
+        }
         if (recentsComponentName != null) {
             String recentsPackageName = recentsComponentName.getPackageName();
             PackageManager manager = context.getPackageManager();
@@ -1374,6 +1376,40 @@ public class EdgeBackGestureHandler implements PluginListener<NavigationEdgeBack
         int rotation = newConfig.windowConfiguration.getRotation();
         mDisabledForQuickstep = mStartingQuickstepRotation > -1 &&
                 mStartingQuickstepRotation != rotation;
+    }
+
+    private ComponentName getValidLauncherComponent(Context context) {
+        int defaultLauncher = SystemProperties.getInt("persist.sys.default_launcher", 0);
+        String[] launcherComponents = context.getResources().getStringArray(
+            com.android.internal.R.array.config_launcherComponents);
+        String[] launcherPackages = context.getResources().getStringArray(
+            com.android.internal.R.array.config_launcherPackages);
+        
+        PackageManager pm = context.getPackageManager();
+        
+        // Validate the selected launcher exists
+        if (defaultLauncher >= 0 && defaultLauncher < launcherComponents.length && 
+            defaultLauncher < launcherPackages.length) {
+            
+            String packageName = launcherPackages[defaultLauncher];
+            try {
+                pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+            return ComponentName.unflattenFromString(launcherComponents[defaultLauncher]);
+            } catch (PackageManager.NameNotFoundException e) {
+                android.util.Log.w("QuickSwitch", "Selected launcher not found: " + packageName);
+            }
+        }
+        
+        // Fallback to com.android.launcher3 (index 0)
+        if (launcherPackages.length > 0 && launcherComponents.length > 0) {
+            try {
+                pm.getApplicationInfo(launcherPackages[0], PackageManager.GET_META_DATA);
+                return ComponentName.unflattenFromString(launcherComponents[0]);
+            } catch (PackageManager.NameNotFoundException e) {
+                android.util.Log.e("QuickSwitch", "No valid launcher found!");
+            }
+        }
+        return null;
     }
 
     public void onConfigurationChanged(@NonNull Configuration newConfig) {

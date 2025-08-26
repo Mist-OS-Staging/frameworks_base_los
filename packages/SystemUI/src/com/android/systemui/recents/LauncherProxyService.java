@@ -41,6 +41,8 @@ import static com.android.systemui.shared.system.QuickStepContract.addInterface;
 import static com.android.window.flags.Flags.predictiveBackSwipeEdgeNoneApi;
 import static com.android.window.flags.Flags.predictiveBackThreeButtonNav;
 
+import android.content.pm.PackageManager;
+import android.os.SystemProperties;
 import android.annotation.FloatRange;
 import android.annotation.Nullable;
 import android.app.ActivityTaskManager;
@@ -759,9 +761,12 @@ public class LauncherProxyService implements CallbackController<LauncherProxyLis
         mShadeInteractor = shadeInteractor;
         mUserTracker = userTracker;
         mConnectionBackoffAttempts = 0;
-        int defaultLauncher = android.os.SystemProperties.getInt("persist.sys.default_launcher", 0);
-        String[] launcherComponents = context.getResources().getStringArray(com.android.internal.R.array.config_launcherComponents);
-        mRecentsComponentName = ComponentName.unflattenFromString(launcherComponents[defaultLauncher]);
+        mRecentsComponentName = getValidLauncherComponent(context);
+        if (mRecentsComponentName == null) {
+            // Ultimate fallback to system default
+            mRecentsComponentName = ComponentName.unflattenFromString(context.getString(
+                com.android.internal.R.string.config_recentsComponentName));
+        }
         mQuickStepIntent = new Intent(ACTION_QUICKSTEP)
                 .setPackage(mRecentsComponentName.getPackageName());
         mPerDisplaySysUiStateRepository = perDisplaySysUiStateRepository;
@@ -1290,6 +1295,39 @@ public class LauncherProxyService implements CallbackController<LauncherProxyLis
         mIsEnabled = mContext.getPackageManager().resolveServiceAsUser(mQuickStepIntent,
                 MATCH_SYSTEM_ONLY, currentUser) != null;
     }
+
+    private ComponentName getValidLauncherComponent(Context context) {
+        int defaultLauncher = SystemProperties.getInt("persist.sys.default_launcher", 0);
+        String[] launcherComponents = context.getResources().getStringArray(
+            com.android.internal.R.array.config_launcherComponents);
+        String[] launcherPackages = context.getResources().getStringArray(
+            com.android.internal.R.array.config_launcherPackages);
+        
+        PackageManager pm = context.getPackageManager();
+        
+        if (defaultLauncher >= 0 && defaultLauncher < launcherComponents.length && 
+            defaultLauncher < launcherPackages.length) {
+            
+            String packageName = launcherPackages[defaultLauncher];
+            try {
+                pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+            return ComponentName.unflattenFromString(launcherComponents[defaultLauncher]);
+            } catch (PackageManager.NameNotFoundException e) {
+                android.util.Log.w("QuickSwitch", "Selected launcher not found: " + packageName);
+            }
+        }
+        
+        if (launcherPackages.length > 0 && launcherComponents.length > 0) {
+            try {
+                pm.getApplicationInfo(launcherPackages[0], PackageManager.GET_META_DATA);
+                return ComponentName.unflattenFromString(launcherComponents[0]);
+            } catch (PackageManager.NameNotFoundException e) {
+                android.util.Log.e("QuickSwitch", "No valid launcher found!");
+            }
+        }
+        
+        return null;
+       }
 
     @Override
     public void onNavigationModeChanged(int mode) {
