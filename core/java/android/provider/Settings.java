@@ -7426,6 +7426,12 @@ public final class Settings {
         public static final String LS_MEDIA_ART_BLUR_LEVEL = "ls_media_art_blur_level";
 
         /**
+         * @hide
+         */
+        public static final String ISLAND_NOTIFICATION = "island_notification";
+        public static final String ISLAND_NOTIFICATION_NOW_PLAYING = "island_notification_now_playing";
+
+        /**
          * Keys we no longer back up under the current schema, but want to continue to
          * process when restoring historical backup datasets.
          *
