@@ -119,6 +119,7 @@ import com.android.systemui.dump.DumpManager;
 import com.android.systemui.dump.DumpsysTableLogger;
 import com.android.systemui.mist.header.StatusBarHeaderMachine;
 import com.android.systemui.fragments.FragmentService;
+import com.android.systemui.island.IslandView;
 import com.android.systemui.keyguard.KeyguardUnlockAnimationController;
 import com.android.systemui.keyguard.domain.interactor.KeyguardClockInteractor;
 import com.android.systemui.keyguard.domain.interactor.KeyguardInteractor;
@@ -208,6 +209,7 @@ import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.statusbar.policy.SplitShadeStateController;
 import com.android.systemui.tuner.TunerService;
 import com.android.systemui.unfold.SysUIUnfoldComponent;
+import com.android.systemui.tuner.TunerService;
 import com.android.systemui.util.Compile;
 import com.android.systemui.util.ScrimUtils;
 import com.android.systemui.util.SystemUIBoostFramework;
@@ -271,6 +273,10 @@ public final class NotificationPanelViewController implements
     private static final String COUNTER_PANEL_OPEN = "panel_open";
     public static final String COUNTER_PANEL_OPEN_QS = "panel_open_qs";
     private static final String COUNTER_PANEL_OPEN_PEEK = "panel_open_peek";
+
+    private static final String ISLAND_NOTIFICATION =
+            "system:" + Settings.System.ISLAND_NOTIFICATION;
+
     private static final String DOUBLE_TAP_SLEEP_GESTURE =
             "lineagesystem:" + LineageSettings.System.DOUBLE_TAP_SLEEP_GESTURE;
      private static final String STATUS_BAR_CUSTOM_HEADER =
@@ -356,6 +362,7 @@ public final class NotificationPanelViewController implements
     private final BlurConfig mBlurConfig;
     private final TunerService mTunerService;
 
+    private final TunerService mTunerService;
     private long mDownTime;
     private long mStatusBarLongPressDowntime = -1L;
     private boolean mTouchSlopExceededBeforeDown;
@@ -598,6 +605,9 @@ public final class NotificationPanelViewController implements
     private final PowerInteractor mPowerInteractor;
     private final CoroutineDispatcher mMainDispatcher;
     private final SplitShadeStateController mSplitShadeStateController;
+    private IslandView mNotifIsland;
+    private NotificationStackScrollLayout mNotificationStackScroller;
+    private boolean mUseIslandNotification;
     private final Runnable mFlingCollapseRunnable = () -> fling(0, false /* expand */,
             mNextCollapseSpeedUpFactor, false /* expandBecauseOfFalsing */);
     private final Runnable mHeadsUpExistenceChangedRunnable = () -> {
@@ -787,7 +797,7 @@ public final class NotificationPanelViewController implements
         mStatusBarService = statusBarService;
         mSplitShadeStateController = splitShadeStateController;
         mSplitShadeEnabled =
-                mSplitShadeStateController.shouldUseSplitNotificationShade(mResources);
+        mSplitShadeStateController.shouldUseSplitNotificationShade(mResources);
         mView.setWillNotDraw(!DEBUG_DRAWABLE);
         mShadeHeaderController = shadeHeaderController;
         mTunerService = tunerService;
@@ -954,6 +964,10 @@ public final class NotificationPanelViewController implements
         mQsController.init();
         mShadeHeadsUpTracker.addTrackingHeadsUpListener(
                 mNotificationStackScrollLayoutController::setTrackingHeadsUp);
+        mNotificationStackScroller = mView.findViewById(R.id.notification_stack_scroller);
+        mNotifIsland = mView.findViewById(R.id.notification_island);
+        mNotifIsland.setScroller(mNotificationStackScroller);
+
         mWakeUpCoordinator.setStackScroller(mNotificationStackScrollLayoutController);
         mWakeUpCoordinator.addListener(new NotificationWakeUpCoordinator.WakeUpListener() {
             @Override
@@ -1124,6 +1138,12 @@ public final class NotificationPanelViewController implements
         }
         updateClockAppearance();
         mQsController.updateQsState();
+    }
+
+    void updateIslandBackground() {
+        boolean nightMode = (mView.getContext().getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        mNotifIsland.setIslandBackgroundColorTint(nightMode);
     }
 
     @VisibleForTesting
@@ -2338,6 +2358,7 @@ public final class NotificationPanelViewController implements
 
     private void setHeadsUpManager(HeadsUpManager headsUpManager) {
         mHeadsUpManager = headsUpManager;
+        mNotifIsland.setHeadsupManager(headsUpManager);
         mHeadsUpManager.addListener(mOnHeadsUpChangedListener);
         mHeadsUpTouchHelper = new HeadsUpTouchHelper(
                 headsUpManager,
@@ -3634,6 +3655,14 @@ public final class NotificationPanelViewController implements
         public void onThemeChanged() {
             debugLog("onThemeChanged");
             reInflateViews();
+            updateIslandBackground();
+        }
+
+        @Override
+        public void onUiModeChanged() {
+            if (DEBUG_LOGCAT) Log.d(TAG, "onUiModeChanged");
+            resetViews(true);
+            updateIslandBackground();
         }
 
         @Override
@@ -3788,6 +3817,7 @@ public final class NotificationPanelViewController implements
             mTunerService.addTunable(this, STATUS_BAR_CUSTOM_HEADER);
             mTunerService.addTunable(this, STATUS_BAR_CUSTOM_HEADER_HEIGHT);
             mTunerService.addTunable(this, STATUS_BAR_CUSTOM_HEADER_SHADOW);
+            mTunerService.addTunable(this, ISLAND_NOTIFICATION);
             // Theme might have changed between inflating this view and attaching it to the
             // window, so
             // force a call to onThemeChanged
@@ -3853,6 +3883,18 @@ public final class NotificationPanelViewController implements
         @Override
         public void refreshHeader() {
             mView.post(() -> doUpdateStatusBarCustomHeader(mCurrentBackground, true));
+        }
+
+        @Override
+        public void onTuningChanged(String key, String newValue) {
+            switch (key) {
+                case ISLAND_NOTIFICATION:
+                    mUseIslandNotification = TunerService.parseIntegerSwitch(newValue, false);
+                    mNotifIsland.setIslandEnabled(mUseIslandNotification);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -4549,5 +4591,15 @@ public final class NotificationPanelViewController implements
         } else {
             mQsHeaderImageView.setImageDrawable(dw);
         }
+    }
+
+    @Override
+    public void showIsland(boolean show) {
+        if (!mUseIslandNotification) return;
+        mNotifIsland.showIsland(show, getExpandedFraction());
+    }
+
+    protected void updateIslandVisibility() {
+        mNotifIsland.updateIslandVisibility(getExpandedFraction());
     }
 }
