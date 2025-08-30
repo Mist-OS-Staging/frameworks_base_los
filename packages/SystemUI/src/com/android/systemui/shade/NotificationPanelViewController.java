@@ -363,7 +363,6 @@ public final class NotificationPanelViewController implements
     private final BlurConfig mBlurConfig;
     private final TunerService mTunerService;
 
-    private final TunerService mTunerService;
     private long mDownTime;
     private long mStatusBarLongPressDowntime = -1L;
     private boolean mTouchSlopExceededBeforeDown;
@@ -3852,6 +3851,12 @@ public final class NotificationPanelViewController implements
                             TunerService.parseInteger(newValue, 0);
                     mView.post(() -> updateHeaderImage());
                     break;
+                case ISLAND_NOTIFICATION:
+                    mUseIslandNotification = TunerService.parseIntegerSwitch(newValue, false);
+                    break;
+                case HEADS_UP_NOTIFICATIONS_ENABLED:
+                    mUseHeadsUp = TunerService.parseIntegerSwitch(newValue, false);
+                    break;
                 default:
                     break;
             }
@@ -3875,19 +3880,6 @@ public final class NotificationPanelViewController implements
             mView.post(() -> doUpdateStatusBarCustomHeader(mCurrentBackground, true));
         }
 
-        @Override
-        public void onTuningChanged(String key, String newValue) {
-            switch (key) {
-                case ISLAND_NOTIFICATION:
-                    mUseIslandNotification = TunerService.parseIntegerSwitch(newValue, false);
-                    break;
-                case HEADS_UP_NOTIFICATIONS_ENABLED:
-                    mUseHeadsUp = TunerService.parseIntegerSwitch(newValue, false);
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
     private final class ShadeLayoutChangeListener implements View.OnLayoutChangeListener {
