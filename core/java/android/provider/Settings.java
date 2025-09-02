@@ -14212,6 +14212,12 @@ public final class Settings {
         public static final String LOCK_SCREEN_WEATHER_ENABLED = "lockscreen_weather_enabled";
 
         /**
+         * Whether lockscreen smartspace is enabled.
+         * @hide
+         */
+        public static final String LOCKSCREEN_SMARTSPACE_ENABLED = "lockscreen_smartspace_enabled";
+
+        /**
          * @hide
          */
         public static final String LOCKSCREEN_WEATHER_LOCATION = "lockscreen_weather_location";
