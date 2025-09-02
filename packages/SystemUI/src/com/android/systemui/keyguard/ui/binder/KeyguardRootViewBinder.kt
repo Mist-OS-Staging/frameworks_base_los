@@ -174,6 +174,7 @@ object KeyguardRootViewBinder {
                         viewModel.alpha(viewState).collect { alpha ->
                             view.alpha = alpha
                             childViews[burnInLayerId]?.alpha = alpha
+                            childViews[weatherAreaId]?.alpha = alpha
                         }
                     }
 
@@ -196,6 +197,7 @@ object KeyguardRootViewBinder {
                             }
                             childViews[aodPromotedNotificationId]?.translationY = y
                             childViews[aodNotificationIconContainerId]?.translationY = y
+                            childViews[weatherAreaId]?.translationY = y
                         }
                     }
 
@@ -208,6 +210,7 @@ object KeyguardRootViewBinder {
                                     childViews[burnInLayerId]?.translationX = px
                                     childViews[aodPromotedNotificationId]?.translationX = px
                                     childViews[aodNotificationIconContainerId]?.translationX = px
+                                    childViews[weatherAreaId]?.translationX = px
                                 }
 
                                 state.isToOrFrom(KeyguardState.GLANCEABLE_HUB) -> {
@@ -263,6 +266,7 @@ object KeyguardRootViewBinder {
                     launch {
                         viewModel.burnInLayerVisibility.collect { visibility ->
                             childViews[burnInLayerId]?.visibility = visibility
+                            childViews[weatherAreaId]?.visibility = visibility
                         }
                     }
 
@@ -593,6 +597,7 @@ object KeyguardRootViewBinder {
     }
 
     private val burnInLayerId = R.id.burn_in_layer
+    private val weatherAreaId = R.id.keyguard_weather_area
     private val aodPromotedNotificationId = AodPromotedNotificationSection.viewId
     private val aodNotificationIconContainerId = R.id.aod_notification_icon_container
     private val largeClockId = customR.id.lockscreen_clock_view_large
