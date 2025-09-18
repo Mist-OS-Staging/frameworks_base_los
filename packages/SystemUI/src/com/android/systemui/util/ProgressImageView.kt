@@ -185,4 +185,4 @@ class ProgressImageView @JvmOverloads constructor(
         ) == 1
         visibility = if (enabled) VISIBLE else GONE
     }
-}1
+}
