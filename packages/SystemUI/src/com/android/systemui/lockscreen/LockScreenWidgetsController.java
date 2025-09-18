@@ -96,7 +96,7 @@ public class LockScreenWidgetsController implements OmniJawsClient.OmniJawsObser
             
     private static final String LOCKSCREEN_WIDGETS_STYLE =
             "lockscreen_widgets_style";
-
+            
     private static final String LOCKSCREEN_WIDGETS_TRANSPARENCY =
             "lockscreen_widgets_transparency";
 
@@ -447,8 +447,9 @@ public class LockScreenWidgetsController implements OmniJawsClient.OmniJawsObser
                 return;
             case "wifi":
                 clickListener = v -> toggleWiFi();
-                    longClickListener = v -> {
+                longClickListener = v -> {
                     showInternetDialog(v);
+                    return true;
                 };
                 drawableRes = WIFI_INACTIVE;
                 stringRes = R.string.quick_settings_wifi_label;
@@ -512,7 +513,7 @@ public class LockScreenWidgetsController implements OmniJawsClient.OmniJawsObser
                 if (iv != null) mediaButton = iv;
                 if (efab != null) mediaButtonFab = efab;
                 break;
-		case "weather":
+            case "weather":
                 clickListener = v -> mActivityLauncherUtils.launchWeatherApp();
                 drawableRes = R.drawable.ic_weather;
                 stringRes = R.string.weather_data_unavailable;
@@ -547,6 +548,7 @@ public class LockScreenWidgetsController implements OmniJawsClient.OmniJawsObser
             if (longClickListener != null) efab.setOnLongClickListener(longClickListener);
             if (mediaButtonFab == efab) attachSwipeGesture(efab);
         }
+
         if (iv != null) {
             iv.setOnClickListener(clickListener);
             if (longClickListener != null) iv.setOnLongClickListener(longClickListener);
@@ -1044,7 +1046,7 @@ public class LockScreenWidgetsController implements OmniJawsClient.OmniJawsObser
         if (!isWidgetEnabled("hotspot")) return;
         if (hotspotButton == null && hotspotButtonFab == null) return;
         String hotspotString = mContext.getResources().getString(HOTSPOT_LABEL);
-        updateTileButtonState(hotspotButton, hotspotButtonFab, mHotspotController.isHotspotEnabled(),
+        updateTileButtonState(hotspotButton, hotspotButtonFab, mHotspotController.isHotspotEnabled(), 
             HOTSPOT_ACTIVE, HOTSPOT_INACTIVE, hotspotString, hotspotString);
     }
 
