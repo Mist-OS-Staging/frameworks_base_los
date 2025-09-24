@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.internal.util.android;
+package com.android.internal.util.mist;
 
 import android.content.Context;
 import android.os.AsyncTask;
