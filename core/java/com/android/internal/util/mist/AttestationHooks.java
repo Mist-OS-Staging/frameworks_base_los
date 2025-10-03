@@ -43,6 +43,7 @@ public final class AttestationHooks {
 
     private static final String PACKAGE_GPHOTOS = "com.google.android.apps.photos";
     private static final String PACKAGE_SNAPCHAT = "com.snapchat.android";
+    private static final String PACKAGE_NETFLIX = "com.netflix.mediaclient";
 
     private static final String SPOOF_PIXEL_GPHOTOS = "persist.sys.pixelprops.gphotos";
     private static final String SPOOF_PIXEL_SNAPCHAT = "persist.sys.pixelprops.snap";
@@ -93,6 +94,12 @@ public final class AttestationHooks {
         if (packageName.equals(PACKAGE_SNAPCHAT)) {
             if (SystemProperties.getBoolean(SPOOF_PIXEL_SNAPCHAT, false)) {
                 sPixelXLProps.forEach(AttestationHooks::setPropValue);
+            }
+        }
+
+        if (packageName.equals(PACKAGE_NETFLIX)) {
+            if (SystemProperties.getBoolean(SPOOF_PIXEL_NETFLIX, false)) {
+                sMainlineProps.forEach(AttestationHooks::setPropValue);
             }
         }
     }
