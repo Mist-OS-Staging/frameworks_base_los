@@ -47,6 +47,7 @@ public final class AttestationHooks {
 
     private static final String SPOOF_PIXEL_GPHOTOS = "persist.sys.pixelprops.gphotos";
     private static final String SPOOF_PIXEL_SNAPCHAT = "persist.sys.pixelprops.snap";
+    private static final String SPOOF_PIXEL_NETFLIX = "persist.sys.pixelprops.netflix";
 
     private static final Map<String, Object> sMainlineProps = Map.of(
         "BRAND", "google",

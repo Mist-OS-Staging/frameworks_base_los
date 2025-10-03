@@ -55,7 +55,7 @@ import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.Log;
 
-import com.android.internal.util.evolution.KeyboxImitationHooks;
+import com.android.internal.util.mist.KeyboxImitationHooks;
 
 import libcore.util.EmptyArray;
 

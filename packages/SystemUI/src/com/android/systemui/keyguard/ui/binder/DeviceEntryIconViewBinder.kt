@@ -55,7 +55,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.SharingStarted
 import android.provider.Settings
 import android.os.UserHandle
-import com.android.internal.util.evolution.Utils
+import com.android.internal.util.mist.Utils
 
 object DeviceEntryIconViewBinder {
     private const val TAG = "DeviceEntryIconViewBinder"
@@ -85,7 +85,7 @@ object DeviceEntryIconViewBinder {
         overrideColor: Color? = null,
     ): DisposableHandle {
         val packageInstalled = Utils.isPackageInstalled(
-            view.context, "org.evolution.udfps.icons"
+            view.context, "org.mist.udfps.icons"
         )
 
         val shouldUseCustomUdfpsIcon: StateFlow<Boolean> = callbackFlow {

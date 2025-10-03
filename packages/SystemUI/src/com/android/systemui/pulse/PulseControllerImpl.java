@@ -58,10 +58,10 @@ import android.widget.FrameLayout;
 
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dagger.qualifiers.UiBackground;
+import com.android.systemui.media.NotificationMediaManager;
 import com.android.systemui.navigationbar.views.NavigationBarFrame;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.CommandQueue.Callbacks;
-import com.android.systemui.statusbar.NotificationMediaManager;
 import com.android.systemui.statusbar.phone.CentralSurfacesImpl;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.util.MediaSessionManagerHelper;

@@ -16,7 +16,7 @@
  *
  */
 
-package com.android.systemui.evolution.header;
+package com.android.systemui.mist.header;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -51,7 +51,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.android.systemui.res.R;
-import com.android.internal.util.evolution.Utils;
+import com.android.internal.util.mist.Utils;
 
 public class DaylightHeaderProvider implements
         StatusBarHeaderMachine.IStatusBarHeaderProvider {

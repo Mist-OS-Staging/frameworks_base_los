@@ -200,7 +200,7 @@ constructor(
 
         val intent = Intent()
         intent.setClassName("com.android.settings",
-                "com.android.settings.Settings\$EvolutionSettingsActivity")
+                "com.android.settings.Settings\$MistSettingsActivity")
         activityStarter.startActivity(
             intent,
             true /* dismissShade */,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.internal.util.evolution;
+package com.android.internal.util.mist;
 
 import android.app.AlertDialog;
 import android.app.IActivityManager;

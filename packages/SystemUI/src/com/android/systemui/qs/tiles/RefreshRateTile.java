@@ -20,7 +20,7 @@ import android.service.quicksettings.Tile;
 import androidx.annotation.Nullable;
 
 import com.android.internal.logging.MetricsLogger;
-import com.android.internal.util.evolution.DisplayRefreshRateHelper;
+import com.android.internal.util.mist.DisplayRefreshRateHelper;
 
 import com.android.systemui.animation.Expandable;
 import com.android.systemui.dagger.qualifiers.Background;
@@ -40,8 +40,8 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import org.evolution.display.IRefreshRateListener;
-import org.evolution.display.RefreshRateManager;
+import org.mist.display.IRefreshRateListener;
+import org.mist.display.RefreshRateManager;
 
 public class RefreshRateTile extends QSTileImpl<State> {
 

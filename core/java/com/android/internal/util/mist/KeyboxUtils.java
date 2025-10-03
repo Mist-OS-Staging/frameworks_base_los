@@ -2,7 +2,7 @@
  * SPDX-FileCopyrightText: 2025 Neoteric OS
  * SPDX-License-Identifier: Apache-2.0
  */
-package com.android.internal.util.evolution;
+package com.android.internal.util.mist;
 
 import android.security.keystore.KeyProperties;
 import android.system.keystore2.KeyEntryResponse;

@@ -32,8 +32,8 @@ import android.view.View;
 
 import com.android.systemui.res.R;
 
-import com.android.internal.util.evolution.ThemeUtils;
-import com.android.internal.util.evolution.VibrationUtils;
+import com.android.internal.util.mist.ThemeUtils;
+import com.android.internal.util.mist.VibrationUtils;
 
 public class VolumeUtils {
     private static final String TAG = "VolumeUtils";

@@ -857,8 +857,8 @@ public class UdfpsController implements DozeReceiver, Dumpable {
             );
         }
 
-        if (com.android.internal.util.evolution.Utils.isPackageInstalled(mContext,
-                "org.evolution.udfps.animations")) {
+        if (com.android.internal.util.mist.Utils.isPackageInstalled(mContext,
+                "org.mist.udfps.animations")) {
             updateUdfpsAnimation();
             mConfigurationController.addCallback(mConfigurationListener);
         }

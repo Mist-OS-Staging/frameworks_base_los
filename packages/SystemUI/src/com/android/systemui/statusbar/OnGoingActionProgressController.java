@@ -54,7 +54,7 @@ import com.android.systemui.statusbar.OnGoingActionProgressGroup;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.util.MediaSessionManagerHelper;
 
-import com.android.internal.util.evolution.VibrationUtils;
+import com.android.internal.util.mist.VibrationUtils;
 
 import java.util.HashMap;
 import java.util.concurrent.Executor;

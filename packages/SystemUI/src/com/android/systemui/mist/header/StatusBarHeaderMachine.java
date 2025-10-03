@@ -16,7 +16,7 @@
  *
  */
 
-package com.android.systemui.evolution.header;
+package com.android.systemui.mist.header;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -76,7 +76,7 @@ public class StatusBarHeaderMachine {
     private String mCurrentProviderName;
 
     // broadcast providers sent when they update the header image
-    public static final String STATUS_BAR_HEADER_UPDATE_ACTION = "com.android.systemui.evolution.header.STATUS_BAR_HEADER_UPDATE";
+    public static final String STATUS_BAR_HEADER_UPDATE_ACTION = "com.android.systemui.mist.header.STATUS_BAR_HEADER_UPDATE";
 
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override

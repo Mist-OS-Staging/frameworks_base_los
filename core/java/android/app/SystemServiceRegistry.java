@@ -290,8 +290,8 @@ import com.android.internal.os.IDropBoxManagerService;
 import com.android.internal.policy.PhoneLayoutInflater;
 import com.android.internal.util.Preconditions;
 
-import org.evolution.display.IRefreshRateManagerService;
-import org.evolution.display.RefreshRateManager;
+import org.mist.display.IRefreshRateManagerService;
+import org.mist.display.RefreshRateManager;
 
 import java.util.HashMap;
 import java.util.Map;

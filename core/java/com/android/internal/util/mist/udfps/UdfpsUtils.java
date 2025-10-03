@@ -13,14 +13,14 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.android.internal.util.evolution.udfps;
+package com.android.internal.util.mist.udfps;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import com.android.internal.util.evolution.Utils;
+import com.android.internal.util.mist.Utils;
 
 public class UdfpsUtils {
-    private static final String UDFPS_ANIMATIONS_PACKAGE = "org.evolution.udfps.animations";
+    private static final String UDFPS_ANIMATIONS_PACKAGE = "org.mist.udfps.animations";
     public static boolean hasUdfpsSupport(Context context) {
         return Utils.isPackageInstalled(context, UDFPS_ANIMATIONS_PACKAGE);
     }

@@ -102,8 +102,8 @@ import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.IntSupplier;
 
-import org.evolution.display.IRefreshRateListener;
-import org.evolution.display.RefreshRateManager;
+import org.mist.display.IRefreshRateListener;
+import org.mist.display.RefreshRateManager;
 
 /**
  * The DisplayModeDirector is responsible for determining what modes are allowed to be automatically

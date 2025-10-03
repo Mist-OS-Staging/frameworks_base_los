@@ -41,6 +41,7 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.android.internal.R;
+import com.android.internal.util.mist.KeyProviderManager;
 import com.android.internal.util.mist.Utils;
 
 import java.lang.reflect.Field;
@@ -73,12 +74,12 @@ public final class PixelPropsUtils {
     private static final String PROP_HOOKS = "persist.sys.pihooks_";
     private static final String SPOOF_QSB = "persist.sys.pixelprops.qsb";
     private static final String SPOOF_PIXEL_PROPS = "persist.sys.pixelprops";
-    private static final String NABLE_GAME_PROP_OPTIONS = "persist.sys.gameprops.enabled";
+    private static final String ENABLE_GAME_PROP_OPTIONS = "persist.sys.gameprops.enabled";
     public static final String SPOOF_PIXEL_GMS = "persist.sys.pixelprops.gms";
     private static final String ENABLE_KEYBOX_CHECK = "persist.sys.keybox.check.enabled";
 
     private static final String TAG = PixelPropsUtils.class.getSimpleName();
-    private static final boolean DEBUG = SystemProperties.getBoolean(PROP_HOOKS + "DEBUG", false;
+    private static final boolean DEBUG = SystemProperties.getBoolean(PROP_HOOKS + "DEBUG", false);
 
     private static final String sDeviceModel =
             SystemProperties.get("ro.product.model", Build.MODEL);

@@ -2,7 +2,7 @@
  * SPDX-FileCopyrightText: 2024 Paranoid Android
  * SPDX-License-Identifier: Apache-2.0
  */
-package com.android.internal.util.evolution;
+package com.android.internal.util.mist;
 
 /**
  * Interface for keybox providers.

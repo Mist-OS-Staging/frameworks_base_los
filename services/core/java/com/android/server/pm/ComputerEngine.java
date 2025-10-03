@@ -186,7 +186,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import com.android.internal.util.evolution.HideAppListUtils;
+import com.android.internal.util.mist.HideAppListUtils;
 
 /**
  * This class contains the implementation of the Computer functions.  It
