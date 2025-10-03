@@ -4,9 +4,22 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-    <!-- The location of the devices physical tri state switch -->
-    <java-symbol type="integer" name="config_alertSliderLocation" />
+    <!-- Pocket Mode -->
+    <style name="PocketModeTitle">
+        <item name="android:textSize">@dimen/pocket_mode_title_size</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:alpha">0.85</item>
+    </style>
 
-    <!-- Whether key handler sends intent when changing slider position -->
-    <java-symbol type="string" name="config_alertSliderIntent" />
+    <style name="PocketModeInstructionsTitle">
+        <item name="android:textSize">@dimen/pocket_mode_instructions_title_size</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:alpha">0.5</item>
+    </style>
+
+    <style name="PocketModeInstructionStep">
+        <item name="android:textSize">@dimen/pocket_mode_instructions_step_size</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:alpha">0.5</item>
+    </style>
 </resources>
