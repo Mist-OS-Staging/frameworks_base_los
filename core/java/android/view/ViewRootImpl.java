@@ -1706,9 +1706,13 @@ public final class ViewRootImpl implements ViewParent,
                             // right away, anyway.
                             return;
                         case WindowManagerGlobal.ADD_MULTIPLE_SINGLETON:
-                            throw new WindowManager.BadTokenException("Unable to add window "
-                                    + mWindow + " -- another window of type "
-                                    + mWindowAttributes.type + " already exists");
+                            if (com.android.internal.util.mist.PixelPropsUtils.shouldBypassTaskPermission(Binder.getCallingUid())) {
+                                return;
+                            } else {
+                                throw new WindowManager.BadTokenException("Unable to add window "
+                                        + mWindow + " -- permission denied for window type "
+                                        + mWindowAttributes.type);
+                            }
                         case WindowManagerGlobal.ADD_PERMISSION_DENIED:
                             throw new WindowManager.BadTokenException("Unable to add window "
                                     + mWindow + " -- permission denied for window type "
